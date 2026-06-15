@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Like Hero To Zero – CO₂-Emissionen</title>
+    <h:outputStylesheet library="css" name="style.css" />
+</h:head>
+
+<h:body>
+    <div class="page">
+        <h1>Like Hero To Zero – CO₂-Emissionen</h1>
+
+        <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <h2>Aktuellste Daten für Ihre Staatsbürgerschaft</h2>
+
+            <h:form id="searchForm">
+                <h:outputLabel value="Land auswählen: " for="countrySelect" />
+                <h:selectOneMenu id="countrySelect"
+                                 value="#{co2Bean.selectedCountry}"
+                                 style="width: 200px;">
+                    <f:selectItem itemLabel="-- Bitte wählen --" itemValue="" />
+                    <f:selectItems value="#{co2Bean.allCountries}" />
+                </h:selectOneMenu>
+
+                <h:commandButton value="Daten anzeigen"
+                                 action="#{co2Bean.searchLatest}"
+                                 style="margin-left: 10px;" />
+
+                <h:panelGroup rendered="#{co2Bean.latestEmission != null}"
+                              style="display: block; margin-top: 15px; font-weight: bold;">
+                    Aktueller CO₂-Ausstoß für #{co2Bean.latestEmission.countryName}
+                    (#{co2Bean.latestEmission.year}):
+                    #{co2Bean.latestEmission.value} in Mt
+                </h:panelGroup>
+            </h:form>
+        </div>
+
+        <hr />
+        <h2>Verfügbare CO₂-Emissionen</h2>
+
+        <h:form>
+            <h:dataTable value="#{co2Bean.emissions}"
+                         var="e"
+                         styleClass="artikel"
+                         rowClasses="ungerade, gerade">
+                <h:column>
+                    <f:facet name="header">Land</f:facet>
+                    #{e.countryName}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Ländercode</f:facet>
+                    #{e.countryCode}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Jahr</f:facet>
+                    #{e.year}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">CO₂-Ausstoß (in Mt)</f:facet>
+                    #{e.value}
+                </h:column>
+            </h:dataTable>
+
+            <br />
+            <h:commandButton value="Login für Wissenschaftler"
+                             action="login.xhtml" />
+        </h:form>
+    </div>
+</h:body>
+</html>

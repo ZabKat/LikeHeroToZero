@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Like Hero To Zero – Wissenschaftler-Portal</title>
+    <h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body>
+    <div class="page">
+        <h:panelGroup rendered="#{loginController.authorized}">
+            <h:form id="editForm">
+                <div class="top-bar">
+                    <h:commandButton value="Logout"
+                                     action="#{logoutController.logout}"
+                                     immediate="true" />
+                </div>
+
+                <h1>CO2-Daten verwalten</h1>
+
+                <h:dataTable value="#{co2Bean.emissions}"
+                             var="e"
+                             styleClass="artikel"
+                             rowClasses="ungerade, gerade">
+                    <h:column>
+                        <f:facet name="header">Land</f:facet>
+                        <h:outputText value="#{e.countryName}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Code</f:facet>
+                        <h:outputText value="#{e.countryCode}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Jahr</f:facet>
+                        <h:outputText value="#{e.year}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">CO₂-Ausstoß (in Mt)</f:facet>
+                        <h:outputText value="#{e.value}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Aktionen</f:facet>
+                        <h:commandButton value="Bearbeiten"
+                                         action="#{co2Bean.edit(e)}"
+                                         immediate="true" />
+                        <h:commandButton value="Löschen"
+                                         action="#{co2Bean.delete(e)}"
+                                         onclick="return confirm('Wirklich löschen?');"
+                                         immediate="true" />
+                    </h:column>
+                </h:dataTable>
+
+                <hr />
+
+                <h2>Daten hinzufügen / ändern</h2>
+              
+                <h:messages globalOnly="true" styleClass="error" />
+
+                <h:panelGrid columns="3"> 
+                    
+                    <h:outputLabel value="Land:" for="land" />
+                    <h:inputText id="land"
+                                 value="#{co2Bean.currentEmission.countryName}"
+                                 label="Land" 
+                                 required="true" />
+                    <h:message for="land" styleClass="error" />
+
+                    <h:outputLabel value="Code (z.B. DE):" for="code" />
+                    <h:inputText id="code"
+                                 value="#{co2Bean.currentEmission.countryCode}"
+                                 label="Ländercode"
+                                 required="true" />
+                    <h:message for="code" styleClass="error" />
+
+                    <h:outputLabel value="Jahr:" for="jahr" />
+                    <h:selectOneMenu id="jahr"
+                                     value="#{co2Bean.currentEmission.year}"
+                                     label="Jahr">
+                        <f:selectItems value="#{co2Bean.years}" />
+                    </h:selectOneMenu>
+                    <h:message for="jahr" styleClass="error" />
+
+                    <h:outputLabel value="CO₂-Ausstoß (in Mt):" for="wert" />
+                    <h:inputText id="wert"
+                                 value="#{co2Bean.currentEmission.value}"
+                                 label="CO2-Ausstoß"
+                                 required="true">
+                        <f:convertNumber pattern="#0.0" />
+                        <f:validateDoubleRange minimum="0.0" />
+                    </h:inputText>
+                    <h:message for="wert" styleClass="error" />
+
+                    <h:outputText value="" />
+                    <h:commandButton value="Speichern" action="#{co2Bean.save}" />
+                    <h:outputText value="" />
+
+                </h:panelGrid>
+                <br />
+            </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{!loginController.authorized}">
+            <h1>Zugriff verweigert</h1>
+            <p>Bitte loggen Sie sich ein.</p>
+            <h:button value="Zum Login" outcome="login.xhtml" />
+        </h:panelGroup>
+    </div>
+</h:body>
+</html>
